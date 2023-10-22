@@ -6,37 +6,48 @@ class TransactionModel {
   final DateTime time;
   final double pay;
   final bool isIncome;
+  final String? description;
   late double totalBalance;
 
-  TransactionModel(
-      {required this.icon,
-      required this.category,
-      required this.time,
-      required this.pay,
-      required this.isIncome}) {
+  TransactionModel({
+    required this.icon,
+    required this.category,
+    this.description,
+    required this.time,
+    required this.pay,
+    required this.isIncome,
+  }) {
     if (isIncome) {
       totalBalance = pay;
     } else {
       totalBalance = -pay;
     }
   }
-  Map<String, dynamic> toMap() {
+
+  // TransactionModel'i JSON'a dönüştürme işlemi
+  Map<String, dynamic> toJson() {
     return {
-      'icon': icon.codePoint,
+      'icon': icon
+          .codePoint, // IconData'nın codePoint özelliğini kullanarak int olarak sakla
       'category': category,
+      'description': description,
       'time': time.toIso8601String(),
       'pay': pay,
       'isIncome': isIncome,
+      'totalBalance': totalBalance,
     };
   }
 
-  factory TransactionModel.fromMap(Map<String, dynamic> map) {
+  // JSON'dan TransactionModel oluşturma işlemi
+  factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
-      icon: IconData(map['icon'], fontFamily: 'MaterialIcons'),
-      category: map['category'],
-      time: DateTime.parse(map['time']),
-      pay: map['pay'],
-      isIncome: map['isIncome'],
+      icon: IconData(json['icon'],
+          fontFamily: 'MaterialIcons'), // IconData'ı geri yükle
+      category: json['category'],
+      description: json['description'],
+      time: DateTime.parse(json['time']),
+      pay: json['pay'],
+      isIncome: json['isIncome'],
     );
   }
 }

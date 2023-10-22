@@ -3,6 +3,7 @@ import 'package:finance_app/constants/padding.dart';
 import 'package:finance_app/constants/sizes.dart';
 import 'package:finance_app/controllers/transaction_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class TheMostSpending extends StatelessWidget {
   TheMostSpending({
@@ -11,7 +12,7 @@ class TheMostSpending extends StatelessWidget {
   });
 
   final List<MapEntry<String, double>> sortedCategoryExpenses;
-  final TransactionController controller = TransactionController();
+  final TransactionController controller = Get.find();
   @override
   Widget build(BuildContext context) {
     return Padding(

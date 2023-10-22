@@ -14,6 +14,17 @@ class ChartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<TransactionController>(
       builder: (transactionController) {
+        if (transactionController.transactionList.isEmpty ||
+            !transactionController.transactionList
+                .any((transaction) => !transaction.isIncome)) {
+          return Center(
+            child: Text(
+              'Kayıtlı Gider Verisi Yoktur.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          );
+        }
+
         const Duration animationDuration = Duration(seconds: 3);
 
         // Kategorilere göre giderleri ve gelirleri hesapla

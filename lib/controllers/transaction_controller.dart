@@ -1,114 +1,73 @@
 import 'package:finance_app/constants/colors.dart';
 import 'package:finance_app/models/transaction_model.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class TransactionController extends GetxController {
-  final GetStorage storage = GetStorage();
+  final box = GetStorage();
+  static const storageKey = 'transactions';
 
-  double calculateIncomeForSelectedMonth() {
-    double income = 0;
-    final selectedMonth = selectedDate.value.month;
-    final selectedYear = selectedDate.value.year;
-
-    for (var transaction in transactionList) {
-      if (transaction.isIncome &&
-          transaction.time.month == selectedMonth &&
-          transaction.time.year == selectedYear) {
-        income += transaction.pay;
-      }
-    }
-    return income;
+  // Veriyi cihaza kaydetme işlemi
+  void saveDataToStorage() {
+    final transactionListJson =
+        transactionList.map((transaction) => transaction.toJson()).toList();
+    box.write(storageKey, transactionListJson);
   }
 
-  double calculateExpenseForSelectedMonth() {
-    double expense = 0;
-    final selectedMonth = selectedDate.value.month;
-    final selectedYear = selectedDate.value.year;
+  // Liste ve cihazdan veriyi kaldırmak için fonksiyon
+  void removeTransaction(int index) {
+    if (index >= 0 && index < transactionList.length) {
+      // Veriyi cihazdan kaldır
+      final removedTransaction = transactionList[index];
+      final transactionListJson = transactionList
+          .where((t) => t != removedTransaction)
+          .map((transaction) => transaction.toJson())
+          .toList();
+      box.write(storageKey, transactionListJson);
 
-    for (var transaction in transactionList) {
-      if (!transaction.isIncome &&
-          transaction.time.month == selectedMonth &&
-          transaction.time.year == selectedYear) {
-        expense += transaction.pay;
-      }
+      // Listeden kaldır
+      transactionList.removeAt(index);
+
+      // Filtrelenmiş listeyi güncelle
+      filterTransactionsByMonth(selectedDate.value);
     }
-    return expense;
   }
 
-  RxList<TransactionModel> transactionList = [
-    TransactionModel(
-        icon: Icons.food_bank_outlined,
-        category: 'Yemek',
-        time: DateTime(
-            DateTime.now().year, DateTime.now().month - 2, DateTime.now().day),
-        pay: 100,
-        isIncome: true),
-    TransactionModel(
-        icon: Icons.food_bank_outlined,
-        category: 'Alışveriş',
-        time: DateTime(
-            DateTime.now().year, DateTime.now().month - 3, DateTime.now().day),
-        pay: 100,
-        isIncome: false),
-    TransactionModel(
-        icon: Icons.mobile_friendly,
-        category: 'Teknoloji',
-        time: DateTime(
-            DateTime.now().year, DateTime.now().month - 1, DateTime.now().day),
-        pay: 1000,
-        isIncome: false),
-    TransactionModel(
-        icon: Icons.mobile_friendly,
-        category: 'MAAŞ',
-        time: DateTime.now(),
-        pay: 1500,
-        isIncome: true),
-    TransactionModel(
-        icon: Icons.food_bank_outlined,
-        category: 'Transfer',
-        time: DateTime.now(),
-        pay: 100,
-        isIncome: true),
-    TransactionModel(
-        icon: Icons.food_bank_outlined,
-        category: 'Tekstil',
-        time: DateTime.now(),
-        pay: 250,
-        isIncome: false),
-    TransactionModel(
-        icon: Icons.food_bank_outlined,
-        category: 'Kahve',
-        time: DateTime(
-            DateTime.now().year, DateTime.now().month - 1, DateTime.now().day),
-        pay: 200,
-        isIncome: false),
-    TransactionModel(
-        icon: Icons.food_bank_outlined,
-        category: 'Mobilya',
-        time: DateTime.now(),
-        pay: 400,
-        isIncome: false),
-  ].obs;
+  // Cihazdan veriyi yükleme işlemi
+  void loadDataFromStorage() {
+    final storedData = box.read<List>('transactions');
+    if (storedData != null) {
+      transactionList.value = storedData
+          .map((data) => TransactionModel.fromJson(data))
+          .toList()
+          .obs;
+      filterTransactionsByMonth(selectedDate.value);
+    }
+  }
 
+  RxList transactionList = [].obs;
+  //Filtreleme
+  Rx<DateTime> selectedDate = DateTime.now().obs;
+
+  RxList filteredTransactions = [].obs;
   // Yeni bir işlem eklemek için fonksiyon
-  void addTransaction() {
-    final addTransaction = TransactionModel(
-      icon: Icons.food_bank_outlined,
-      category: 'Mobilya',
-      time: DateTime.now(),
-      pay: 1250,
-      isIncome: false,
-    );
+  // Ekleme işlemi (ekledikten sonra veriyi kaydet)
+  void addTransaction(TransactionModel transactionModel) {
+    final addTransaction = transactionModel;
 
     transactionList.insert(0, addTransaction);
     Get.snackbar(
-      'Mesaj',
-      'İşlem eklendi',
+      transactionModel.category,
+      transactionModel.isIncome.toString(),
       colorText: kBackgroundColor,
       backgroundColor: kPurpleColor,
     );
+
+    // Update filtered transactions
+    update();
+
+    // Veriyi cihaza kaydet
+    saveDataToStorage();
   }
 
   // Gelirleri hesaplayan fonksiyon
@@ -139,16 +98,6 @@ class TransactionController extends GetxController {
     double totalExpense = calculateExpense();
     return totalIncome - totalExpense;
   }
-
-  //Filtreleme
-  Rx<DateTime> selectedDate = DateTime.now().obs;
-
-  RxList filteredTransactions = [].obs;
-  // void filterTransactionsByDate(DateTime selectedDate) {
-  //   filteredTransactions.value = transactionList
-  //       .where((transaction) => isSameDay(transaction.time, selectedDate))
-  //       .toList();
-  // }
 
   void changeSelectedDate(DateTime newDate) {
     selectedDate.value = newDate;
