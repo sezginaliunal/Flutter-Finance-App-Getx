@@ -1,0 +1,19 @@
+  // Yeni bir işlem eklemek için fonksiyon
+  // Ekleme işlemi (ekledikten sonra veriyi kaydet)
+  // void addTransaction(TransactionModel transactionModel) {
+  //   final addTransaction = transactionModel;
+
+  //   transactionList.insert(0, addTransaction);
+  //   Get.snackbar(
+  //     transactionModel.category,
+  //     transactionModel.isIncome.toString(),
+  //     colorText: kBackgroundColor,
+  //     backgroundColor: kPurpleColor,
+  //   );
+
+  //   // Update filtered transactions
+  //   update();
+
+  //   // Veriyi cihaza kaydet
+  //   saveDataToStorage();
+  // }

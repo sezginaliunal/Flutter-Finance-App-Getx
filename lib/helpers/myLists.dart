@@ -1,4 +1,3 @@
-import 'package:finance_app/screens/add_transaction.dart';
 import 'package:finance_app/screens/bill_screen.dart';
 import 'package:finance_app/screens/chartScreen.dart';
 import 'package:finance_app/screens/home.dart';
@@ -8,7 +7,6 @@ final List<Widget> pages = [
   HomeScreen(),
   const ChartScreen(),
   const BillScreen(),
-  const AddTransactionScreen(),
 ];
 final List<IconData> iconList = [
   Icons.home,
@@ -19,8 +17,7 @@ final List<IconData> iconList = [
 final List<String> iconTitle = [
   'Anasayfa',
   'Durumum',
-  'Çek/Senet',
-  'İşlem ekle'
+  'Takvimim',
 ];
 Map<String, double> categoryExpenses = {};
 Map<String, double> categoryIncome = {};

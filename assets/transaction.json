@@ -1,0 +1,82 @@
+[
+  {
+    "icon": 59475,
+    "category": "Market Alışverişi",
+    "description": "Gıda alışverişi",
+    "time": "2023-10-22T10:30:00",
+    "pay": 150.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59542,
+    "category": "Fatura Ödemesi",
+    "description": "Elektrik faturası",
+    "time": "2023-10-23T15:45:00",
+    "pay": 100.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59489,
+    "category": "Maaş",
+    "description": "Ağustos maaşı",
+    "time": "2023-10-24T12:00:00",
+    "pay": 3500.0,
+    "isIncome": true
+  },
+  {
+    "icon": 59648,
+    "category": "Yemek",
+    "description": "Restoran yemeği",
+    "time": "2023-10-25T19:00:00",
+    "pay": 50.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59463,
+    "category": "Market Alışverişi",
+    "description": "Temel gıda alışverişi",
+    "time": "2023-10-26T14:15:00",
+    "pay": 80.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59466,
+    "category": "Eğlence",
+    "description": "Sinema biletleri",
+    "time": "2023-10-27T17:30:00",
+    "pay": 30.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59480,
+    "category": "Market Alışverişi",
+    "description": "Temizlik malzemeleri",
+    "time": "2023-10-28T11:45:00",
+    "pay": 40.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59577,
+    "category": "Maaş",
+    "description": "Eylül maaşı",
+    "time": "2023-10-29T12:00:00",
+    "pay": 3500.0,
+    "isIncome": true
+  },
+  {
+    "icon": 59652,
+    "category": "Yemek",
+    "description": "Fast-food yemeği",
+    "time": "2023-10-30T13:30:00",
+    "pay": 15.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59496,
+    "category": "Market Alışverişi",
+    "description": "Kişisel bakım ürünleri",
+    "time": "2023-10-31T16:00:00",
+    "pay": 25.0,
+    "isIncome": false
+  }
+]

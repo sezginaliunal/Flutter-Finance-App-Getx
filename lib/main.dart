@@ -9,7 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() async {
   await GetStorage.init();
   await initializeDateFormatting('tr_TR', 'en_EN');
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

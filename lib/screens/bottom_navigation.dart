@@ -30,7 +30,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
   AnimatedBottomNavigationBar bottomNavigationBar(BuildContext context) {
     return AnimatedBottomNavigationBar.builder(
-      itemCount: 4,
+      itemCount: 3,
       tabBuilder: (int index, bool isActive) {
         return BottomNavigatonBarItemsWidget(
           index: index,
@@ -39,11 +39,10 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
       },
       backgroundColor: kDefaultIconLightColor, // Tab bar arkaplan rengi
       activeIndex: _currentIndex, // Seçili sekme
-      gapLocation: GapLocation.center,
       notchSmoothness:
           NotchSmoothness.defaultEdge, // Seçili tab'ın kenarlık yumuşaklığı
-      leftCornerRadius: 32,
-      rightCornerRadius: 32,
+      // leftCornerRadius: 32,
+      // rightCornerRadius: 32,
       onTap: (index) {
         setState(() {
           _currentIndex = index;

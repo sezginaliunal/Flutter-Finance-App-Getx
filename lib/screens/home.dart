@@ -3,10 +3,8 @@ import 'package:finance_app/constants/colors.dart';
 import 'package:finance_app/constants/padding.dart';
 import 'package:finance_app/constants/radius.dart';
 import 'package:finance_app/constants/sizedBox.dart';
-
 import 'package:finance_app/controllers/transaction_controller.dart';
 import 'package:finance_app/helpers/date_time.dart';
-import 'package:finance_app/models/transaction_model.dart';
 import 'package:finance_app/screens/fi_chart.dart';
 import 'package:finance_app/widget/home_totalbalance.dart';
 import 'package:flutter/material.dart';
@@ -19,17 +17,12 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key}) {
     // initState içinde tarihi başlangıçta şu anki zamana ayarladım
     transactionController.changeSelectedDate(DateTime.now());
-    transactionController.loadDataFromStorage();
+    transactionController.loadJsonData();
   }
 
   @override
   Widget build(BuildContext context) {
     return _homeBody(context);
-  }
-
-  void _deleteTransaction(int index) {
-    // İşlemi listeden kaldır
-    transactionController.removeTransaction(index);
   }
 
   Widget _homeBody(BuildContext context) {
@@ -111,36 +104,19 @@ class HomeScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final transaction =
                           transactionController.filteredTransactions[index];
-                      return Dismissible(
-                        key: UniqueKey(),
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(
-                              right: 20.0), // Silme arka plan rengi
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onDismissed: (direction) {
-                          _deleteTransaction(index);
-                        },
-                        child: Padding(
-                          padding: MyPaddings.symmetricSix,
-                          child: TransactionCard(
-                            dateTimeDay: formatDayName(transaction.time),
-                            dateTimeNumber: formatOnlyDay(transaction.time),
-                            dateTimeMonthYear:
-                                formatMonthYear(transaction.time),
-                            icon: transaction.icon,
-                            category: transaction.category,
-                            pay:
-                                '${transaction.isIncome ? '+' : '-'}${transaction.pay.toStringAsFixed(2)} ₺',
-                            isIncome: transaction.isIncome,
-                            description:
-                                transaction.description ?? 'Açıklama yok',
-                          ),
+                      return Padding(
+                        padding: MyPaddings.symmetricSix,
+                        child: TransactionCard(
+                          dateTimeDay: formatDayName(transaction.time),
+                          dateTimeNumber: formatOnlyDay(transaction.time),
+                          dateTimeMonthYear: formatMonthYear(transaction.time),
+                          icon: transaction.icon,
+                          category: transaction.category,
+                          pay:
+                              '${transaction.isIncome ? '+' : '-'}${transaction.pay.toStringAsFixed(2)} ₺',
+                          isIncome: transaction.isIncome,
+                          description:
+                              transaction.description ?? 'Açıklama yok',
                         ),
                       );
                     },

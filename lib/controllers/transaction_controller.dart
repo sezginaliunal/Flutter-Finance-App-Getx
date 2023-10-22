@@ -1,48 +1,28 @@
-import 'package:finance_app/constants/colors.dart';
+import 'dart:convert';
+
 import 'package:finance_app/models/transaction_model.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class TransactionController extends GetxController {
-  final box = GetStorage();
-  static const storageKey = 'transactions';
-
-  // Veriyi cihaza kaydetme işlemi
-  void saveDataToStorage() {
-    final transactionListJson =
-        transactionList.map((transaction) => transaction.toJson()).toList();
-    box.write(storageKey, transactionListJson);
+  @override
+  void onInit() {
+    super.onInit();
+    loadJsonData();
   }
 
-  // Liste ve cihazdan veriyi kaldırmak için fonksiyon
-  void removeTransaction(int index) {
-    if (index >= 0 && index < transactionList.length) {
-      // Veriyi cihazdan kaldır
-      final removedTransaction = transactionList[index];
-      final transactionListJson = transactionList
-          .where((t) => t != removedTransaction)
-          .map((transaction) => transaction.toJson())
-          .toList();
-      box.write(storageKey, transactionListJson);
+  //Veriyi yükle
+  Future<void> loadJsonData() async {
+    final String jsonTransactions =
+        await rootBundle.loadString('assets/transaction.json');
+    final List<dynamic> decodedJson = jsonDecode(jsonTransactions);
 
-      // Listeden kaldır
-      transactionList.removeAt(index);
+    transactionList.value =
+        decodedJson.map((data) => TransactionModel.fromJson(data)).toList().obs;
 
-      // Filtrelenmiş listeyi güncelle
-      filterTransactionsByMonth(selectedDate.value);
-    }
-  }
-
-  // Cihazdan veriyi yükleme işlemi
-  void loadDataFromStorage() {
-    final storedData = box.read<List>('transactions');
-    if (storedData != null) {
-      transactionList.value = storedData
-          .map((data) => TransactionModel.fromJson(data))
-          .toList()
-          .obs;
-      filterTransactionsByMonth(selectedDate.value);
-    }
+    // Verileri filteredTransactions listesine de ekleyin
+    filteredTransactions.value =
+        decodedJson.map((data) => TransactionModel.fromJson(data)).toList();
   }
 
   RxList transactionList = [].obs;
@@ -50,25 +30,6 @@ class TransactionController extends GetxController {
   Rx<DateTime> selectedDate = DateTime.now().obs;
 
   RxList filteredTransactions = [].obs;
-  // Yeni bir işlem eklemek için fonksiyon
-  // Ekleme işlemi (ekledikten sonra veriyi kaydet)
-  void addTransaction(TransactionModel transactionModel) {
-    final addTransaction = transactionModel;
-
-    transactionList.insert(0, addTransaction);
-    Get.snackbar(
-      transactionModel.category,
-      transactionModel.isIncome.toString(),
-      colorText: kBackgroundColor,
-      backgroundColor: kPurpleColor,
-    );
-
-    // Update filtered transactions
-    update();
-
-    // Veriyi cihaza kaydet
-    saveDataToStorage();
-  }
 
   // Gelirleri hesaplayan fonksiyon
   double calculateIncome() {
