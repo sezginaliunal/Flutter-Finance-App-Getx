@@ -15,7 +15,6 @@ class HomeScreen extends StatelessWidget {
       Get.put(TransactionController());
 
   HomeScreen({super.key}) {
-    // initState içinde tarihi başlangıçta şu anki zamana ayarladım
     transactionController.changeSelectedDate(DateTime.now());
     transactionController.loadJsonData();
   }
@@ -26,105 +25,104 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _homeBody(BuildContext context) {
-    return Obx(() {
-      transactionController
-          .filterTransactionsByMonth(transactionController.selectedDate.value);
-      return Column(
-        children: [
-          Height.thirty,
-          HomeTotalBalanceWidget(transactionController: transactionController),
-          const FiChartPage(),
-          Padding(
-            padding: MyPaddings.paddingSmall,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                CircleAvatar(
-                  backgroundColor: kShadowColor2,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: kDefaultIconDarkColor),
-                    onPressed: () {
-                      _changeMonth(-1);
-                    },
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => _selectDate(context),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: kShadowColor2,
-                        borderRadius: MyBorderRadius.circularEight),
-                    child: Padding(
-                      padding: MyPaddings.symmetricSix,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.date_range_outlined,
-                            color: kDefaultIconDarkColor,
-                          ),
-                          Width.five,
-                          Text(
-                            customFormattedDate(
-                                transactionController.selectedDate.value),
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: kDefaultIconDarkColor,
-                                    ),
-                          ),
-                        ],
+    return Obx(() => ListView(
+          physics: const BouncingScrollPhysics(),
+          children: [
+            Height.thirty,
+            HomeTotalBalanceWidget(
+                transactionController: transactionController),
+            const FiChartPage(),
+            Obx(
+              () => Padding(
+                padding: MyPaddings.paddingSmall,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: kShadowColor2,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back,
+                            color: kDefaultIconDarkColor),
+                        onPressed: () {
+                          _changeMonth(-1);
+                        },
                       ),
                     ),
-                  ),
-                ),
-                CircleAvatar(
-                  backgroundColor: kShadowColor2,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_forward, color: kTextColor),
-                    onPressed: () {
-                      _changeMonth(1);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: transactionController.filteredTransactions.isEmpty
-                ? Center(
-                    child: Text(
-                      'Kayıtlı işlem geçmişi yoktur',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  )
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount:
-                        transactionController.filteredTransactions.length,
-                    itemBuilder: (context, index) {
-                      final transaction =
-                          transactionController.filteredTransactions[index];
-                      return Padding(
-                        padding: MyPaddings.symmetricSix,
-                        child: TransactionCard(
-                          dateTimeDay: formatDayName(transaction.time),
-                          dateTimeNumber: formatOnlyDay(transaction.time),
-                          dateTimeMonthYear: formatMonthYear(transaction.time),
-                          icon: transaction.icon,
-                          category: transaction.category,
-                          pay:
-                              '${transaction.isIncome ? '+' : '-'}${transaction.pay.toStringAsFixed(2)} ₺',
-                          isIncome: transaction.isIncome,
-                          description:
-                              transaction.description ?? 'Açıklama yok',
+                    GestureDetector(
+                      onTap: () => _selectDate(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: kShadowColor2,
+                            borderRadius: MyBorderRadius.circularEight),
+                        child: Padding(
+                          padding: MyPaddings.symmetricSix,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.date_range_outlined,
+                                color: kDefaultIconDarkColor,
+                              ),
+                              Width.five,
+                              Text(
+                                customFormattedDate(
+                                    transactionController.selectedDate.value),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: kDefaultIconDarkColor,
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
-                      );
-                    },
-                  ),
-          )
-        ],
-      );
-    });
+                      ),
+                    ),
+                    CircleAvatar(
+                      backgroundColor: kShadowColor2,
+                      child: IconButton(
+                        icon:
+                            const Icon(Icons.arrow_forward, color: kTextColor),
+                        onPressed: () {
+                          _changeMonth(1);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+                padding: MyPaddings.symmetricSix,
+                child: Column(
+                  children: transactionController.filteredTransactions.isEmpty
+                      ? [
+                          Center(
+                            child: Text(
+                              'Kayıtlı işlem geçmişi yoktur',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ]
+                      : transactionController.filteredTransactions
+                          .map((transaction) {
+                          return TransactionCard(
+                            dateTimeDay: formatDayName(transaction.time),
+                            dateTimeNumber: formatOnlyDay(transaction.time),
+                            dateTimeMonthYear:
+                                formatMonthYear(transaction.time),
+                            icon: transaction.icon,
+                            category: transaction.category,
+                            pay:
+                                '${transaction.isIncome ? '+' : '-'}${transaction.pay.toStringAsFixed(2)} ₺',
+                            isIncome: transaction.isIncome,
+                            description:
+                                transaction.description ?? 'Açıklama yok',
+                          );
+                        }).toList(),
+                )),
+          ],
+        ));
   }
 
   Future<void> _selectDate(BuildContext context) async {

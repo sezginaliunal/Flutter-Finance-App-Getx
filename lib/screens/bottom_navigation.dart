@@ -37,6 +37,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
           isActive: isActive,
         );
       },
+
+      gapWidth: MediaQuery.of(context).size.width / 20,
       backgroundColor: kDefaultIconLightColor, // Tab bar arkaplan rengi
       activeIndex: _currentIndex, // Seçili sekme
       notchSmoothness:

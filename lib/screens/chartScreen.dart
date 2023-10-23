@@ -50,6 +50,7 @@ class ChartScreen extends StatelessWidget {
         return Padding(
           padding: MyPaddings.onlyTop,
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 Width.twenty,

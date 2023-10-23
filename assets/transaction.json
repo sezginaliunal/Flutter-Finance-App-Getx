@@ -78,5 +78,53 @@
     "time": "2023-10-31T16:00:00",
     "pay": 25.0,
     "isIncome": false
+  },
+  {
+    "icon": 59496,
+    "category": "Market Alışverişi",
+    "description": "Kişisel bakım ürünleri",
+    "time": "2023-09-22T16:00:00",
+    "pay": 500.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59545,
+    "category": "Yemek",
+    "description": "Kafe kahvesi",
+    "time": "2023-09-23T08:30:00",
+    "pay": 10.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59513,
+    "category": "Market Alışverişi",
+    "description": "Ev temizlik malzemeleri",
+    "time": "2023-09-24T14:30:00",
+    "pay": 45.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59479,
+    "category": "Market Alışverişi",
+    "description": "Günlük alışveriş",
+    "time": "2023-09-25T10:15:00",
+    "pay": 75.0,
+    "isIncome": false
+  },
+  {
+    "icon": 59584,
+    "category": "Maaş",
+    "description": "Ekim maaşı",
+    "time": "2023-09-26T12:00:00",
+    "pay": 3500.0,
+    "isIncome": true
+  },
+  {
+    "icon": 59584,
+    "category": "Maaş",
+    "description": "Ekim maaşı",
+    "time": "2023-09-26T12:00:00",
+    "pay": 12000.0,
+    "isIncome": false
   }
 ]
